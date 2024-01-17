@@ -1,0 +1,57 @@
+name: CD
+run-name: Release ${{ inputs.version }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: 'SDK用来发布的CDN下载链接'
+        required: true
+        type: string
+
+      version:
+        description: 'SDK用来发布的版本号'
+        required: true
+        type: string
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.PAT }}
+          path: repo
+      
+      - name: Download SDK and unzip
+        run: |
+          shopt -s globstar
+          curl -o sdk.zip ${{ inputs.url }}
+          unzip sdk.zip
+          rm **/cmviot*javadoc*.jar || true
+
+      - name: Copy SDK to repo
+        run: |
+          shopt -s globstar
+          cp **/cmviot*.jar repo/library/libs
+          cp **/arm64-v8a/*.so repo/library/src/main/jniLibs/arm64-v8a
+          cp **/armeabi-v7a/*.so repo/library/src/main/jniLibs/armeabi-v7a
+          cp **/x86/*.so repo/library/src/main/jniLibs/x86
+          cp **/x86_64/*.so repo/library/src/main/jniLibs/x86_64
+
+      - name: Update version
+        run: |
+          sed "s/publishVersion = '\(.*\)'/publishVersion = '${{ inputs.version }}'/g" build.gradle > tmp
+          mv tmp build.gradle
+        working-directory: repo/library
+
+      - name: Commit and push modify
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: Release ${{ inputs.version }} with ${{ inputs.url }}
+          branch: release/${{ inputs.version }}
+          repository: repo
+          tagging_message: ${{ inputs.version }}
+          create_branch: true
