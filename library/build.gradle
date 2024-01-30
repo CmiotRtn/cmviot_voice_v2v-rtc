@@ -13,7 +13,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 28
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -36,6 +36,6 @@ publish {
     userOrg = 'cmviot'
     groupId = 'io.cmviot.rtc'
     artifactId = 'cmviot-voice'
-    publishVersion = '4.2.2.234'
+    publishVersion = '1.0.0'
     desc = 'cmviot'
 }
