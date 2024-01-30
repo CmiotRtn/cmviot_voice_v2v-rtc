@@ -14,6 +14,11 @@ on:
         required: true
         type: string
 
+      dry-run:
+        description: '正式发布前的预发布测试'
+        default: true
+        type: boolean
+
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -53,5 +58,6 @@ jobs:
           commit_message: Release ${{ inputs.version }} with ${{ inputs.url }}
           branch: release/${{ inputs.version }}
           repository: repo
-          tagging_message: ${{ inputs.version }}
+          tagging_message: ${{ !inputs.dry-run && inputs.version || '' }}
           create_branch: true
+          push_options: '--force'

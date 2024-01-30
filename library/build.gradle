@@ -35,7 +35,7 @@ dependencies {
 publish {
     userOrg = 'cmviot'
     groupId = 'io.cmviot.rtc'
-    artifactId = 'cmviot_voice'
+    artifactId = 'cmviot-voice'
     publishVersion = '4.2.2.234'
     desc = 'cmviot'
 }
