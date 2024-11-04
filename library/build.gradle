@@ -36,6 +36,6 @@ publish {
     userOrg = 'cmviot'
     groupId = 'io.cmviot.rtc'
     artifactId = 'cmviot-voice'
-    publishVersion = '1.0.0'
+    publishVersion = '4.2.2.239'
     desc = 'cmviot'
 }
